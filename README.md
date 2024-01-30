@@ -11,4 +11,4 @@
 ## Запуск приложения
 Выполнить команду: 
 
-```docker-compose up -d --build```
+```python manage.py runserver```
