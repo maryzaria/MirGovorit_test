@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Рецепты</title>
+</head>
+<body>
+<h2>Все рецепты</h2>
+
+{% for recipe in recipes %}
+    <b>{{ recipe.title }}: </b>
+    {% for item in recipe.weight.all %}
+        <p>{{ item.product }} - {{ item.weight }} г</p>
+    {% endfor %}
+{% empty %}
+    <p>Рецептов нет</p>
+{% endfor %}
+</body>
+</html>
