@@ -1,39 +1,26 @@
 version: '3.9'
 
 services:
-  backend:
-    image: cook_book
-    build:
-      context: cook_book
-      dockerfile: Dockerfile
-    expose:
-      - 8000
-    command: sh -c "python manage.py migrate &&
-             gunicorn cook_book.wsgi:application --bind 0.0.0.0:8000"
+  web:
+    build: ./app
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - 8000:8000
     volumes:
-      - static_volume:/cook_book/static
+      - ./app/:/src/
     env_file:
-      - ./.env.prod
+      - ./.env.dev
     depends_on:
-      - database
+      - database   
+    
   database:
     image: postgres:14.6-alpine
-    env_file:
-      - ./.env.db
+    environment:
+      - POSTGRES_USER=cook_book
+      - POSTGRES_PASSWORD=cook_book
+      - POSTGRES_DB=cook_book_dev
     volumes:
-      - pg-data:/var/lib/postgres/data
-  server:
-    image: nginx:latest
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile
-    ports:
-      - "8080:80"
-    depends_on:
-      - backend
-    volumes:
-      - static_volume:/cook_book/static
+      - pg-data:/var/lib/postgresql/data/
+
 volumes:
     pg-data:
-    static_volume:
-    media_volume:
