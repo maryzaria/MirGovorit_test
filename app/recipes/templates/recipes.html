@@ -15,6 +15,8 @@
 {% empty %}
     <p>Рецептов нет</p>
 {% endfor %}
+
+{% if page_obj.has_other_pages %}
 <nav>
     <ul>
         <p>Страницы: </p>
@@ -23,6 +25,6 @@
         {% endfor %}
     </ul>
 </nav>
-
+{% endif %}
 </body>
 </html>

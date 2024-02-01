@@ -12,13 +12,16 @@
 {% empty %}
     <p>Рецептов нет</p>
 {% endfor %}
+{% if page_obj.has_other_pages %}
 <nav>
     <ul>
+
         <p>Страницы: </p>
         {% for r in page_obj.paginator.page_range %}
             <a href="?page={{ r }}">{{ r }}</a>
         {% endfor %}
     </ul>
 </nav>
+{% endif %}
 </body>
 </html>
