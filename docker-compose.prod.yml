@@ -1,0 +1,38 @@
+version: '3.9'
+
+services:
+  web:
+    build: 
+      context: ./app
+      dockerfile: Dockerfile.prod
+    # command: gunicorn cook_book.wsgi:application --bind 0.0.0.0:8000
+    command: sh -c "python manage.py migrate &&
+             gunicorn cook_book.wsgi:application --bind 0.0.0.0:8000"
+    expose:
+      - 8000
+    volumes:
+      - static_volume:/src/staticfiles
+    env_file:
+      - ./.env.prod
+    depends_on:
+      - database   
+    
+  database:
+    image: postgres:14.6-alpine
+    env_file:
+      - ./.env.prod.db
+    volumes:
+      - pg-data:/var/lib/postgresql/data/
+
+  nginx:
+    build: ./nginx
+    volumes:
+      - static_volume:/src/staticfiles
+    ports:
+      - 1337:80
+    depends_on:
+      - web
+
+volumes:
+    pg-data:
+    static_volume:
