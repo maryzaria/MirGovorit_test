@@ -7,13 +7,22 @@
 <body>
 <h2>Все рецепты</h2>
 
-{% for recipe in recipes %}
-    <b>{{ recipe.title }}: </b>
+{% for recipe in page_obj %}
+    <b>{{ recipe.title }} </b>
     {% for item in recipe.weight.all %}
-        <p>{{ item.product }} - {{ item.weight }} г</p>
+        <p>- {{ item.product }} - {{ item.weight }} г</p>
     {% endfor %}
 {% empty %}
     <p>Рецептов нет</p>
 {% endfor %}
+<nav>
+    <ul>
+        <p>Страницы: </p>
+        {% for r in page_obj.paginator.page_range %}
+            <a href="?page={{ r }}">{{ r }}</a>
+        {% endfor %}
+    </ul>
+</nav>
+
 </body>
 </html>

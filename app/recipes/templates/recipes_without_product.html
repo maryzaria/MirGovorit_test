@@ -7,10 +7,18 @@
 <body>
 <h3>Рецепты без продукта "{{ product }}"</h3>
 <b>id | Рецепт </b>
-{% for recipe in recipes %}
+{% for recipe in page_obj %}
     <p>{{ recipe.id }} | {{ recipe.title }} </p>
 {% empty %}
     <p>Рецептов нет</p>
 {% endfor %}
+<nav>
+    <ul>
+        <p>Страницы: </p>
+        {% for r in page_obj.paginator.page_range %}
+            <a href="?page={{ r }}">{{ r }}</a>
+        {% endfor %}
+    </ul>
+</nav>
 </body>
 </html>

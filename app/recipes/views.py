@@ -1,12 +1,18 @@
+from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import render
 
-from recipes.models import Product, Recipe, Weight
+from .models import Product, Recipe, Weight
 
 
 def recipes_list(request):
     recipes = Recipe.objects.all().order_by("title")
-    context = {"recipes": recipes}
+
+    paginator = Paginator(recipes, 3)
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+
+    context = {"page_obj": page_obj}
     return render(request, template_name="recipes.html", context=context)
 
 
@@ -49,8 +55,12 @@ def show_recipes_without_product(request, product_id):
         recipes2 = Recipe.objects.filter(
             weight__product=product, weight__weight__lte=10
         )
+        recipes = list(set(recipes1 | recipes2))
+        paginator = Paginator(recipes, 3)
+        page_number = request.GET.get('page', 1)
+        page_obj = paginator.get_page(page_number)
 
-        context = {"recipes": set(recipes1 | recipes2), "product": str(product)}
+        context = {"page_obj": page_obj, "product": str(product)}
         return render(
             request, template_name="recipes_without_product.html", context=context
         )
